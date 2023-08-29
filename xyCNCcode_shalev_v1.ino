@@ -177,20 +177,20 @@ void randomDrawing() {
     c = 1;  
   }
   else if (c == 1) {
-    move(0 ,0);
+    move(10 ,10);
     move(200, 0);
     move(400, 140.64);
     move(400, 340.64);
     move(200, 490.29);
-    move(0, 340.64);
-    move(0, 140.64);
+    move(10, 340.64);
+    move(10, 140.64);
     move(200, 0);
-    move(0 ,0);
+    move(10 ,10);
     c = 2;
    }
 
   else if (c == 2) {
-    move(0, 0);       // Start point from (0, 0)
+    move(10, 10);       // Start point from (0, 0)
     move(40.14, 700.36);
     move(90.39, 140.14);
     move(150.36, 190.39);
@@ -200,7 +200,7 @@ void randomDrawing() {
     move(380.38, 190.57);
     move(410.96, 140.35);
     move(440.12, 70.58);
-    move(440.68, 0.77);
+    move(440.68, 10.77);
     move(430.60, -50.10);
     move(410.00, -100.31);
     move(360.99, -150.00);
@@ -210,7 +210,7 @@ void randomDrawing() {
     move(120.84, -200.47);
     move(70.00, -170.74);
     move(20.28, -130.60);
-    move(0, 0);       // Return to the start point
+    move(10, 10);       // Return to the start point
     c = 0;
    }
 
