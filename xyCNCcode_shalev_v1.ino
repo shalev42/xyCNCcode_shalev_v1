@@ -34,7 +34,7 @@ uint32_t Current_Time = 0   ;
 
 //---------------------------------------------------------------------------------------------------------
 //things you can change to controll the machine:
-const int SpeedOFMotors = 1000; // Adjust the value as needed for motor speed
+const int SpeedOFMotors = 1100; // Adjust the value as needed for motor speed
 const int NumOfSteps = 5; //steps multiplayer
 // Bounding box limits
 int max_y = 3800;  // Adjust the maximum Y-axis coordinate
