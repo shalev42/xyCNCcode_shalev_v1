@@ -33,7 +33,7 @@ int16_t Old_Encoder_B_Count = 0;// for later use
 uint32_t Current_Time = 0   ;
 
 //---------------------------------------------------------------------------------------------------------
-//things you van change to controll the machine:
+//things you can change to controll the machine:
 const int SpeedOFMotors = 1000; // Adjust the value as needed for motor speed
 const int NumOfSteps = 5; //steps multiplayer
 // Bounding box limits
