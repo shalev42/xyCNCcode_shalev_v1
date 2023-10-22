@@ -11,8 +11,6 @@
 #define ENCODER_B_BIT_0 (12) // input IO for gray code bit 1
 // cross bits(0-1) for change counting direction (CW<>CCW)
 //pins:
-const int homingSwitchXPin = A4; // Pin for X-axis homing switch
-const int homingSwitchYPin = A5; // Pin for Y-axis homing switch
 int buttonPin1 = A2; 
 int buttonPin2 = A3; 
 
@@ -115,7 +113,7 @@ void moveMotor(int dirPin, int stepPin, int steps) {
   }
 }
 //---------------------------------------------------------------------------------------------------------
-void homing(int dirPin, int homingSwitchPin, int stepPin, int &currentPos) {
+void homing(int dirPin, int stepPin, int &currentPos) {
   unsigned long startTime = millis();
   
   // Move the motors in the specified direction for 30 seconds
@@ -208,8 +206,6 @@ void setup() {
   pinMode(X_DIR_PIN, OUTPUT);
   pinMode(Y_STEP_PIN, OUTPUT);
   pinMode(Y_DIR_PIN, OUTPUT);
-  pinMode(homingSwitchXPin, INPUT_PULLUP);
-  pinMode(homingSwitchYPin, INPUT_PULLUP);
   pinMode(buttonPin1, INPUT_PULLUP);
   pinMode(buttonPin2, INPUT_PULLUP);
     // make encoder IO pulsedup inputs:
@@ -226,8 +222,8 @@ void setup() {
   debouncerButton2.interval(50); 
   
   // Homing switches
-  homing(-X_DIR_PIN, homingSwitchXPin, X_STEP_PIN, current_x);
-  homing(Y_DIR_PIN, homingSwitchYPin, Y_STEP_PIN, current_y);
+  homing(-X_DIR_PIN, X_STEP_PIN, current_x);
+  homing(Y_DIR_PIN, Y_STEP_PIN, current_y);
   
   //move to the start of the drawing board:
   move(800,-800);
