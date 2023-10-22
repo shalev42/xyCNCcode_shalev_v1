@@ -5,16 +5,16 @@
 #define X_DIR_PIN          2
 #define Y_STEP_PIN         6
 #define Y_DIR_PIN          3
-#define ENCODER_A_BIT_1 (11) // input IO for gray code bit 0 
-#define ENCODER_A_BIT_0 (10) // input IO for gray code bit 1
-#define ENCODER_B_BIT_1 (A3) // input IO for gray code bit 0
-#define ENCODER_B_BIT_0 (A2) // input IO for gray code bit 1
+#define ENCODER_A_BIT_1 (A0) // input IO for gray code bit 0 
+#define ENCODER_A_BIT_0 (9) // input IO for gray code bit 1
+#define ENCODER_B_BIT_1 (A1) // input IO for gray code bit 0
+#define ENCODER_B_BIT_0 (12) // input IO for gray code bit 1
 // cross bits(0-1) for change counting direction (CW<>CCW)
 //pins:
 const int homingSwitchXPin = A4; // Pin for X-axis homing switch
 const int homingSwitchYPin = A5; // Pin for Y-axis homing switch
-int buttonPin1 = 9; 
-int buttonPin2 = A0; 
+int buttonPin1 = A2; 
+int buttonPin2 = A3; 
 
 // set a offset for the printer
 int destPosition1 = 1; // Set your desired X-axis destination for start of the machine
@@ -223,13 +223,15 @@ void setup() {
   debouncerButton1.attach(buttonPin1);
   debouncerButton1.interval(50); // Debounce interval in milliseconds
   debouncerButton2.attach(buttonPin2);
-  debouncerButton2.interval(50); // Debounce interval in milliseconds
+  debouncerButton2.interval(50); 
   
   // Homing switches
   homing(-X_DIR_PIN, homingSwitchXPin, X_STEP_PIN, current_x);
   homing(Y_DIR_PIN, homingSwitchYPin, Y_STEP_PIN, current_y);
   
-  //move(100,300);
+  //move to the start of the drawing board:
+  move(800,-800);
+  
   //move(200,100);
 
 }
@@ -244,6 +246,9 @@ void loop() {
   // Update destPosition1 and destPosition2 with current encoder counts
   destPosition1 = Current_Encoder_A_Count;
   destPosition2 = Current_Encoder_B_Count;
+
+//   Serial.println(Current_Encoder_A_Count);
+//   Serial.println(Current_Encoder_B_Count);
 
   // Calculate the new positions based on the encoder counts
   int new_x = destPosition1;
