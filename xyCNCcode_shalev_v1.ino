@@ -119,16 +119,17 @@ void homing(int dirPin, int homingSwitchPin, int stepPin, int &currentPos) {
   unsigned long startTime = millis();
   
   // Move the motors in the specified direction for 30 seconds
-  while (millis() - startTime < 30000) {
-    moveMotor(dirPin, stepPin, 1);
+  while (millis() - startTime < 10000) {
+    moveMotor(dirPin, stepPin, 1); // Assuming 1 step per iteration, adjust if needed
   }
   
   // Update the current position to 0
   currentPos = 0;
   
   // Move slightly away from the switch
-  moveMotor(dirPin, stepPin, 5);
+  moveMotor(dirPin, stepPin, 5); // Move a few steps away from the homing switch
 }
+
 //---------------------------------------------------------------------------------------------------------
 void move(int new_x, int new_y) {
   // Calculate the difference between the current and new positions
@@ -225,8 +226,8 @@ void setup() {
   debouncerButton2.interval(50); // Debounce interval in milliseconds
   
   // Homing switches
-  //homing(X_DIR_PIN, homingSwitchXPin, X_STEP_PIN, current_x);
-  //homing(Y_DIR_PIN, homingSwitchYPin, Y_STEP_PIN, current_y);
+  homing(-X_DIR_PIN, homingSwitchXPin, X_STEP_PIN, current_x);
+  homing(Y_DIR_PIN, homingSwitchYPin, Y_STEP_PIN, current_y);
   
   //move(100,300);
   //move(200,100);
