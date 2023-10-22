@@ -5,8 +5,8 @@
 #define X_DIR_PIN          2
 #define Y_STEP_PIN         6
 #define Y_DIR_PIN          3
-#define ENCODER_A_BIT_1 (10) // input IO for gray code bit 0 
-#define ENCODER_A_BIT_0 (11) // input IO for gray code bit 1
+#define ENCODER_A_BIT_1 (11) // input IO for gray code bit 0 
+#define ENCODER_A_BIT_0 (10) // input IO for gray code bit 1
 #define ENCODER_B_BIT_1 (A3) // input IO for gray code bit 0
 #define ENCODER_B_BIT_0 (A2) // input IO for gray code bit 1
 // cross bits(0-1) for change counting direction (CW<>CCW)
@@ -34,11 +34,13 @@ uint32_t Current_Time = 0   ;
 
 //---------------------------------------------------------------------------------------------------------
 //things you can change to controll the machine:
-const int SpeedOFMotors = 1100; // Adjust the value as needed for motor speed
-const int NumOfSteps = 5; //steps multiplayer
+const int SpeedOFMotors = 1500; // Adjust the value as needed for motor speed
+const int NumOfSteps = 15; //steps multiplayer
 // Bounding box limits
-int max_y = 3800;  // Adjust the maximum Y-axis coordinate
-int max_x = 3500;  // Adjust the maximum X-axis coordinate
+int max_y = 100;  // Adjust the maximum Y-axis coordinate
+int max_x = 100;  // Adjust the maximum X-axis coordinate
+const int min_x = -100;     // Adjust the minimum X-axis coordinate
+const int min_y = -100;     // Adjust the minimum Y-axis coordinate
 const unsigned long timerDuration = 1000 *(10000000000); // 1 minute in milliseconds delay between random drawings
 
 //---------------------------------------------------------------------------------------------------------
@@ -48,8 +50,7 @@ int current_x = 0; // Current X-axis position
 int current_y = 0; // Current Y-axis position
 int counter_x = 0; // Counter for X-axis movement
 int counter_y = 0; // Counter for Y-axis movement
-const int min_x = 0;     // Adjust the minimum X-axis coordinate
-const int min_y = 0;     // Adjust the minimum Y-axis coordinate
+
 Bounce debouncerButton1 = Bounce(); // Debouncer instance for button 1
 Bounce debouncerButton2 = Bounce(); // Debouncer instance for button 2
 unsigned long timerStart = 0;
@@ -115,13 +116,18 @@ void moveMotor(int dirPin, int stepPin, int steps) {
 }
 //---------------------------------------------------------------------------------------------------------
 void homing(int dirPin, int homingSwitchPin, int stepPin, int &currentPos) {
-  while (digitalRead(homingSwitchPin) == LOW) {
+  unsigned long startTime = millis();
+  
+  // Move the motors in the specified direction for 30 seconds
+  while (millis() - startTime < 30000) {
     moveMotor(dirPin, stepPin, 1);
-    currentPos = 0; // Update current position
   }
-  moveMotor(dirPin, stepPin, 5); // Move slightly away from the switch
-  moveMotor(dirPin, stepPin, -50); // Move back to home position
-  currentPos = 0; // Update current position
+  
+  // Update the current position to 0
+  currentPos = 0;
+  
+  // Move slightly away from the switch
+  moveMotor(dirPin, stepPin, 5);
 }
 //---------------------------------------------------------------------------------------------------------
 void move(int new_x, int new_y) {
@@ -169,9 +175,6 @@ void randomDrawing() {
     move(0 ,0);
     move(300 ,0);
     move(300 ,300);
-    move(-300 ,300);
-    move(-300 ,-300);
-    move(300 ,-300);
     move(300 ,0);
     move(0 ,0);
     c = 1;  
@@ -179,37 +182,15 @@ void randomDrawing() {
   else if (c == 1) {
     move(10 ,10);
     move(200, 0);
-    move(400, 140.64);
-    move(400, 340.64);
-    move(200, 490.29);
-    move(10, 340.64);
-    move(10, 140.64);
-    move(200, 0);
     move(10 ,10);
     c = 2;
    }
 
   else if (c == 2) {
     move(10, 10);       // Start point from (0, 0)
-    move(40.14, 700.36);
+    move(40.14, 100.36);
     move(90.39, 140.14);
-    move(150.36, 190.39);
-    move(210.64, 220.64);
-    move(270.86, 230.85);
-    move(330.57, 220.83);
-    move(380.38, 190.57);
-    move(410.96, 140.35);
-    move(440.12, 70.58);
-    move(440.68, 10.77);
-    move(430.60, -50.10);
-    move(410.00, -100.31);
-    move(360.99, -150.00);
-    move(310.81, -180.67);
-    move(250.76, -200.95);
-    move(190.27, -210.58);
-    move(120.84, -200.47);
-    move(70.00, -170.74);
-    move(20.28, -130.60);
+    move(20.28, 130.60);
     move(10, 10);       // Return to the start point
     c = 0;
    }
@@ -244,8 +225,8 @@ void setup() {
   debouncerButton2.interval(50); // Debounce interval in milliseconds
   
   // Homing switches
-  homing(X_DIR_PIN, homingSwitchXPin, X_STEP_PIN, current_x);
-  homing(Y_DIR_PIN, homingSwitchYPin, Y_STEP_PIN, current_y);
+  //homing(X_DIR_PIN, homingSwitchXPin, X_STEP_PIN, current_x);
+  //homing(Y_DIR_PIN, homingSwitchYPin, Y_STEP_PIN, current_y);
   
   //move(100,300);
   //move(200,100);
@@ -292,10 +273,10 @@ void loop() {
   debouncerButton1.update();
   debouncerButton2.update();
   
-//  // Check if button 1 is pressed
-//  if (debouncerButton1.fell()|| debouncerButton2.fell()) {
-//    Serial.println("Button pressed!");
-//  }
+  // Check if button 1 is pressed
+  if (debouncerButton1.fell()|| debouncerButton2.fell()) {
+    Serial.println("Button pressed!");
+  }
 
 
          //checks for inactivity = button pressing if not - start a timer of 1 minute 
