@@ -9,6 +9,8 @@
 #define ENCODER_A_BIT_0 (9) // input IO for gray code bit 1
 #define ENCODER_B_BIT_1 (A1) // input IO for gray code bit 0
 #define ENCODER_B_BIT_0 (12) // input IO for gray code bit 1
+
+#define STEPPER_EN_PIN 8 //enable steppers pin 
 // cross bits(0-1) for change counting direction (CW<>CCW)
 //pins:
 int buttonPin1 = A2; 
@@ -214,6 +216,8 @@ void setup() {
   pinMode(ENCODER_B_BIT_0, INPUT_PULLUP);  
   pinMode(ENCODER_B_BIT_1, INPUT_PULLUP);  
   Current_Time = millis();
+  pinMode(STEPPER_EN_PIN, OUTPUT);// invert !
+  digitalWrite(STEPPER_EN_PIN, LOW);// enable motors,
   
   // Initialize button debouncers
   debouncerButton1.attach(buttonPin1);
