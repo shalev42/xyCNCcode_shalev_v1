@@ -5,13 +5,12 @@
 #define X_DIR_PIN          2
 #define Y_STEP_PIN         6
 #define Y_DIR_PIN          3
+// cross bits(0-1) for change counting direction (CW<>CCW)
 #define ENCODER_A_BIT_1 (A0) // input IO for gray code bit 0 
 #define ENCODER_A_BIT_0 (9) // input IO for gray code bit 1
 #define ENCODER_B_BIT_1 (A1) // input IO for gray code bit 0
 #define ENCODER_B_BIT_0 (12) // input IO for gray code bit 1
-
 #define STEPPER_EN_PIN 8 //enable steppers pin 
-// cross bits(0-1) for change counting direction (CW<>CCW)
 //pins:
 int buttonPin1 = A2; 
 int buttonPin2 = A3; 
@@ -34,13 +33,13 @@ uint32_t Current_Time = 0   ;
 
 //---------------------------------------------------------------------------------------------------------
 //things you can change to controll the machine:
-const int SpeedOFMotors = 1500; // Adjust the value as needed for motor speed
-const int NumOfSteps = 15; //steps multiplayer
+const int SpeedOFMotors = 700; // Adjust the value as needed for motor speed
+const int NumOfSteps = 1; //steps multiplayer
 // Bounding box limits
-int max_y = 100;  // Adjust the maximum Y-axis coordinate
-int max_x = 100;  // Adjust the maximum X-axis coordinate
-const int min_x = -100;     // Adjust the minimum X-axis coordinate
-const int min_y = -100;     // Adjust the minimum Y-axis coordinate
+int max_y = 500;  // Adjust the maximum Y-axis coordinate
+int max_x = 0;  // Adjust the maximum X-axis coordinate
+const int min_x = 500;     // Adjust the minimum X-axis coordinate
+const int min_y = 0;     // Adjust the minimum Y-axis coordinate
 const unsigned long timerDuration = 1000 *(10000000000); // 1 minute in milliseconds delay between random drawings
 
 //---------------------------------------------------------------------------------------------------------
@@ -53,6 +52,7 @@ int counter_y = 0; // Counter for Y-axis movement
 
 Bounce debouncerButton1 = Bounce(); // Debouncer instance for button 1
 Bounce debouncerButton2 = Bounce(); // Debouncer instance for button 2
+
 unsigned long timerStart = 0;
 int c = 0;
 
@@ -118,16 +118,13 @@ void moveMotor(int dirPin, int stepPin, int steps) {
 void homing(int dirPin, int stepPin, int &currentPos) {
   unsigned long startTime = millis();
   
-  // Move the motors in the specified direction for 30 seconds
-  while (millis() - startTime < 10000) {
+  // Move the motors in the specified direction for 10 seconds
+  while (millis() - startTime < 5000) {
     moveMotor(dirPin, stepPin, 1); // Assuming 1 step per iteration, adjust if needed
   }
-  
   // Update the current position to 0
   currentPos = 0;
-  
-  // Move slightly away from the switch
-  moveMotor(dirPin, stepPin, 5); // Move a few steps away from the homing switch
+
 }
 
 //---------------------------------------------------------------------------------------------------------
@@ -203,7 +200,7 @@ void randomDrawing() {
 //---------------------------------------------------------------------------------------------------------
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   pinMode(X_STEP_PIN, OUTPUT);
   pinMode(X_DIR_PIN, OUTPUT);
   pinMode(Y_STEP_PIN, OUTPUT);
@@ -285,7 +282,7 @@ void loop() {
   }
 
 
-         //checks for inactivity = button pressing if not - start a timer of 1 minute 
+   //checks for inactivity = button pressing if not - start a timer of 1 minute 
     if (millis() - timerStart >= timerDuration) {
     // Timer duration reached, execute the code
     randomDrawing();
@@ -298,4 +295,9 @@ void loop() {
     move(new_x * NumOfSteps, new_y * NumOfSteps);
     timerStart = millis(); // reset timer
   }
+    delay(2);
+    Serial.print("Encoder A Count: ");
+    Serial.print(Current_Encoder_A_Count);
+    Serial.print(", Encoder B Count: ");
+    Serial.println(Current_Encoder_B_Count);
 }
