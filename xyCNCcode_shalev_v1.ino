@@ -37,8 +37,8 @@ const int SpeedOFMotors = 700; // Adjust the value as needed for motor speed
 const int NumOfSteps = 1; //steps multiplayer
 // Bounding box limits
 int max_y = 500;  // Adjust the maximum Y-axis coordinate
-int max_x = 0;  // Adjust the maximum X-axis coordinate
-const int min_x = 500;     // Adjust the minimum X-axis coordinate
+int max_x = 500;  // Adjust the maximum X-axis coordinate
+const int min_x = 0;     // Adjust the minimum X-axis coordinate
 const int min_y = 0;     // Adjust the minimum Y-axis coordinate
 const unsigned long timerDuration = 1000 *(10000000000); // 1 minute in milliseconds delay between random drawings
 
@@ -107,12 +107,12 @@ void Update_Encoder_B_Count(){
 //---------------------------------------------------------------------------------------------------------
 void moveMotor(int dirPin, int stepPin, int steps) {
   digitalWrite(dirPin, steps > 0 ? HIGH : LOW);
-  for (int i = 0; i < abs(steps); i++) {
+//  for (int i = 0; i < abs(steps); i++) {
     digitalWrite(stepPin, HIGH);
     delayMicroseconds(SpeedOFMotors);
     digitalWrite(stepPin, LOW);
     delayMicroseconds(SpeedOFMotors);
-  }
+  //}
 }
 //---------------------------------------------------------------------------------------------------------
 void homing(int dirPin, int stepPin, int &currentPos) {
@@ -120,7 +120,7 @@ void homing(int dirPin, int stepPin, int &currentPos) {
   
   // Move the motors in the specified direction for 10 seconds
   while (millis() - startTime < 5000) {
-    moveMotor(dirPin, stepPin, 1); // Assuming 1 step per iteration, adjust if needed
+    moveMotor(-dirPin, stepPin, 1); // Assuming 1 step per iteration, adjust if needed
   }
   // Update the current position to 0
   currentPos = 0;
